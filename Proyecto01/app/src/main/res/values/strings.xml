@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Proyecto01</string>
+    <string name="boton_name_continuar">CONTINUAR</string>
+    <string name="enviar">ENVIAR</string>
+    <string name="ver_mas">VER MÁS</string>
+    <string name="descripcion_imagen_lugar">Foto del lugar que escogiste.</string>
+    <string name="descripcion_chichen_itza">Chichén Itzá ​ es uno de los principales sitios
+        arqueológicos de la península de Yucatán, en México, ubicado en el municipio de Tinum,
+        en el estado de Yucatán.</string>
+    <string name="descripcion_el_coliseo">El Coliseo (en latín: Amphitheatrum Flavium Romae) es un
+        anfiteatro de la época del Imperio romano, construido en el siglo I d. C. y ubicado en el
+        centro de la ciudad de Roma. Originalmente era denominado Anfiteatro Flavio (Amphitheatrum
+        Flavium), en honor a la dinastía flavia de emperadores que lo construyó, y pasó a llamarse
+        Colosseum por una gran estatua que había cerca, el Coloso de Nerón, que no ha llegado hasta
+        nosotros. Por su conservación e historia, el Coliseo es uno de los monumentos más famosos de
+        la antigüedad clásica. Fue declarado Patrimonio de la Humanidad en 1980 por la Unesco y una
+        de Las Nuevas Siete Maravillas del Mundo Moderno el 7 de julio de 2007.</string>
+    <string name="descripsion_la_estatua_cristo_redentor">El Cristo Redentor o Cristo de Corcovado
+         es una estatua de 30,1 metros, con el pedestal de 8 metros, ​ de Jesús de Nazaret con los
+        brazos abiertos mostrando a la ciudad de Río de Janeiro, en Brasil.</string>
+    <string name="descripcion_la_gran_muralla_china">La Gran Muralla China es una antigua
+        fortificación china construida y reconstruida entre el siglo V a. C. y el siglo XVI
+        (Edad Moderna) para proteger la frontera norte del Imperio chino durante las sucesivas
+        dinastías imperiales de los ataques de los nómadas xiongnu de Mongolia y Manchuria.</string>
+    <string name="descripcion_machu_picchu">Machu Picchu (Spanish pronunciation: [ˈmatʃu ˈpitʃu])
+         (Quechua: Machu Pikchu;[1] [ˈmɑtʃu ˈpixtʃu]) is a 15th-century Inca citadel situated on a
+        mountain ridge 2,430 metres (7,970 ft) above sea level.[2][3] It is located in the Cusco
+        Region, Urubamba Province, Machupicchu District in Peru,[4] above the Sacred Valley, which
+        is 80 kilometres (50 mi) northwest of Cuzco and through which the Urubamba River flows.
+</string>
+    <string name="descripcion_petra">Petra (en árabe, البتراء al-Batrā´) es un importante enclave
+        arqueológico en Jordania, y la capital del antiguo reino nabateo. El nombre de Petra
+        proviene del griego πέτρα que significa piedra, y su nombre es perfectamente idóneo; no se
+        trata de una ciudad construida con piedra sino, literalmente, excavada y esculpida en la
+        piedra.
+</string>
+    <string name="descripcion_el_taj_majal">El Taj Mahal (hindi: ताज महल Tāj Mahal, urdu: تاج محل Tāŷ Mahal
+        Corona de los palacios; tɑːʒ məhɑl) es un mausoleo construido entre 1632 y 1653 en la
+        ciudad de Agra, estado de Uttar Pradesh (India), a orillas del río Yamuna, por el emperador
+        musulmán Shah Jahan de la dinastía mogola. El imponente conjunto de edificios se erigió en
+        honor de su esposa favorita, Arjumand Bano Begum —más conocida como Mumtaz Mahal— que murió
+        en el parto de su decimocuarta hija. Se estima que su construcción necesitó el esfuerzo de
+        unos 20 000 obreros bajo dirección de un conjunto de arquitectos liderados por el arquitecto
+        de la corte, Ustad Ahmad Lahori.</string>
+    <string-array name="lugares_array">
+        <item>Chichén Itzá</item>
+        <item>El Coliseo</item>
+        <item>La estatua Cristo Redentor</item>
+        <item>La Gran Muralla China</item>
+        <item>Machu Picchu</item>
+        <item>Petra</item>
+        <item>El Taj Mahal</item>
+    </string-array>
+</resources>
