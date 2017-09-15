@@ -9,9 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+/**
+ * Actividad con la que comienza la aplicación, esta mostrara las siete maravillas del mundo antiguo
+ * mediante un spinner.
+ * @author Flores González Luis.
+ */
 public class MainActivity extends AppCompatActivity{
 
+    //Continuar a LugarActivity
     private Button botonContinuar;
+    //Siete maravillas del mundo antiguo
     private Spinner spinner;
 
     @Override
@@ -19,6 +26,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setTitle("Inicio");
         botonContinuar = (Button) findViewById(R.id.boton_name_continuar);
 
         this.listarOpciones();
@@ -41,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     * Si selecciona una opción se activara el botón de continuar, para poder enviarlo a la
+     * Si selecciona una opción(lugar) se activara el botón de continuar, para poder enviarlo a la
      * siguiente actividad.
      */
     private void activarOpcionListado(){
@@ -50,14 +58,19 @@ public class MainActivity extends AppCompatActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Un item fue seleccionado. Tu puedes recuperar el item usando parent.getItemAtPosition(pos)
                 final String lugarEscogido = parent.getItemAtPosition(position).toString();
-                botonContinuar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), LugarActivity.class);
-                        intent.putExtra("lugarEscogido", lugarEscogido);
-                        startActivity(intent);
-                    }
-                });
+                if(position == 0){
+                    botonContinuar.setEnabled(false);
+                } else {
+                    botonContinuar.setEnabled(true);
+                    botonContinuar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), LugarActivity.class);
+                            intent.putExtra("lugarEscogido", lugarEscogido);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
 
             @Override

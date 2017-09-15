@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Permite abrir un cliente de correo para enviar la información del lugar.
+ * @author Flores González Luis.
+ */
 public class EnvioLugarActivity extends AppCompatActivity {
 
     private Button botonEnviar;
@@ -21,6 +25,7 @@ public class EnvioLugarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_envio_lugar);
 
+        getSupportActionBar().setTitle("Enviar");
         botonEnviar = (Button) findViewById(R.id.boton_enviar2);
         editTextCorreo = (EditText) findViewById(R.id.editText_correo);
 
@@ -48,17 +53,13 @@ public class EnvioLugarActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
         if (requestCode == EMAIL_CODE) {
-            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
                 Toast.makeText(this, "Tu mensaje fue enviado.", Toast.LENGTH_SHORT).show();
-                // Do something with the contact here (bigger example below)
             }
             if (resultCode == RESULT_CANCELED){
-                Toast.makeText(this, "Tu mensaje no fue enviado.", Toast.LENGTH_SHORT).show();
+                //Se envia el mismo mensaje porque así se especifica en la práctica.
+                Toast.makeText(this, "Tu mensaje fue enviado.", Toast.LENGTH_SHORT).show();
             }
         }
     }

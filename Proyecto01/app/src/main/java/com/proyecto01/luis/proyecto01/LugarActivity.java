@@ -20,6 +20,7 @@ import java.io.File;
  * Muestra la foto y descripción de un lugar en la actividad, además de un botón para abrir el
  * navegador en busca de más información sobre el lugar y otro botón para enviar a una persona el
  * lugar.
+ * @author Flores González Luis.
  */
 public class LugarActivity extends AppCompatActivity {
 
@@ -49,6 +50,8 @@ public class LugarActivity extends AppCompatActivity {
         fotoLugar = (ImageView) findViewById(R.id.fotoLugar);
         botonVerMas = (Button) findViewById(R.id.ver_mas);
         botonEnviar = (Button) findViewById(R.id.boton_enviar);
+
+        getSupportActionBar().setTitle(lugar);
 
         mostrarLugarInformacion();
         abrirEnvioLugarActivity();
@@ -108,7 +111,7 @@ public class LugarActivity extends AppCompatActivity {
     }
 
     /**
-     * Abre el navegador presinando el botón <strong>Ver más</strong>
+     * Abre el navegador presionando el botón <strong>Ver más</strong>
      * @param url Url que tratara abrir implicitamente con el navegador.
      */
     private void abrirNavegador(final String url){
@@ -122,6 +125,9 @@ public class LugarActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Abre la actividad para poder enviar la información del lugar por correo.
+     */
     private void abrirEnvioLugarActivity(){
         botonEnviar.setOnClickListener(new View.OnClickListener() {
             @Override

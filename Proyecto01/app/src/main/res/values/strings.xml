@@ -43,6 +43,7 @@
         unos 20 000 obreros bajo dirección de un conjunto de arquitectos liderados por el arquitecto
         de la corte, Ustad Ahmad Lahori.</string>
     <string-array name="lugares_array">
+        <item>Escoger una opción</item>
         <item>Chichén Itzá</item>
         <item>El Coliseo</item>
         <item>La estatua Cristo Redentor</item>
