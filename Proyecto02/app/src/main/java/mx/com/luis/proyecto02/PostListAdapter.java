@@ -1,11 +1,15 @@
 package mx.com.luis.proyecto02;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 
@@ -23,6 +27,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     class PostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final TextView postItemView;
+        public final TextView albumId;
+        public final ImageView imagenAlbum;
         final PostListAdapter mAdapter;
 
         /**
@@ -34,7 +40,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         public PostViewHolder(View itemView, PostListAdapter adapter) {
             super(itemView);
             //Conseguimos el layaout.
-            postItemView = (TextView) itemView.findViewById(R.id.word);
+            postItemView = (TextView) itemView.findViewById(R.id.title);
+            imagenAlbum = (ImageView) itemView.findViewById(R.id.imagen_album);
+            albumId = (TextView) itemView.findViewById(R.id.album_id);
             //Asociamos con este adaptador.
             this.mAdapter = adapter;
             //Agregar click listener, si se desea.
@@ -82,7 +90,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         //Recupera la información para esa posición.
         Post mCurrent = mPostList.get(position);
         //Agrega la información a la vista.
+        holder.albumId.setText(String.valueOf(mCurrent.getAlbumId()));
         holder.postItemView.setText(mCurrent.getTitle());
+        Picasso.with(holder.postItemView.getContext()).load(mCurrent.getThumbnailUrl()).into(holder.imagenAlbum);
     }
 
     /**

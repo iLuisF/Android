@@ -7,22 +7,40 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity {
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.widget.Toast;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Post>> {
 
     private RecyclerView mRecyclerView;
     private PostListAdapter mAdapter;
     //Lista de items.
-    private final LinkedList<Post> mPostList = new LinkedList<>();
+    private LinkedList<Post> mPostList = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportLoaderManager().initLoader(0, null, this);
 
         //Datos de prueba
-        for (int i = 0; i < 20; i++){
-            mPostList.addLast(new Post(i));
-        }
+        //for (int i = 0; i < 20; i++){
+        //    mPostList.addLast(new Post(i));
+        //}
+
+
+    }
+
+    @Override
+    public Loader<List<Post>> onCreateLoader(int id, Bundle args) {
+        return new PostLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
+        mPostList.addAll(data);
 
         //Comienza Recyclerview.
         // Create recycler view.
@@ -34,5 +52,12 @@ public class MainActivity extends AppCompatActivity {
         // Give the recycler view a default layout manager.
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Finaliza Recyclerview.
+
+        //Toast.makeText(this, "JSONLoaded with :" + data.size() +" elements", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Post>> loader) {
+
     }
 }

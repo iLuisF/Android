@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Proyecto02</string>
+    <string name="url_photo">https://jsonplaceholder.typicode.com/photos</string>
 </resources>
