@@ -5,11 +5,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Post>> {
@@ -40,6 +46,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
+
+        if (loader.getId() == 1) {//Ordenar por titulo.
+
+        }
+
+        if (loader.getId() == 2) {//Ordenar por id.
+
+        }
         mPostList.addAll(data);
 
         //Comienza Recyclerview.
@@ -60,4 +74,68 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<List<Post>> loader) {
 
     }
+
+    //Comienza menu_main.
+
+    /**
+     * Inicializa los contenidos del menu_main de opciones estandar de la actividad, es este caso
+     * es el menu_main para ordenar ya sea por id o por titulo.
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /**
+     * Cuando el usuario seleccione una opción del menu_main se activara su acción.
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_ordenar_id:
+                //Código para ordenar de acuerdo al id.
+
+                Collections.sort(mPostList, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return Collator.getInstance().compare(String.valueOf(o1.getId()), String.valueOf(o2.getId()));
+                    }
+                });
+
+                //Pasamos la lista ordenara al adaptador.
+                mAdapter = new PostListAdapter(this, mPostList);
+                getSupportLoaderManager().restartLoader(0, null, MainActivity.this);
+
+                Toast.makeText(this, "ID", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.option_ordenar_titulo:
+                //Código para ordenar de acuerdo al titulo.
+                Collections.sort(mPostList, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post o1, Post o2) {
+                        return Collator.getInstance().compare(o1.getTitle(), o2.getTitle());
+                    }
+                });
+
+                //Pasamos la lista ordenara al adaptador.
+                mAdapter = new PostListAdapter(this, mPostList);
+                getSupportLoaderManager().restartLoader(0, null, MainActivity.this);
+
+                Toast.makeText(this, "Titulo", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;//Revisar esta linea.
+    }
+
+
+    //Finaliza menu_main.
 }
