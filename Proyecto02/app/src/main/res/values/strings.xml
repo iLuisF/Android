@@ -3,4 +3,5 @@
     <string name="url_photo">https://jsonplaceholder.typicode.com/photos</string>
     <string name="menu_ordenar_titulo">Titulo</string>
     <string name="menu_ordenar_id">ID</string>
+    <string name="title_activity_informacion">InformacionActivity</string>
 </resources>

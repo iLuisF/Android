@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private PostListAdapter mAdapter;
     //Lista de items.
     private LinkedList<Post> mPostList = new LinkedList<>();
+    private int opcionOrdenar = 0; //1 titulo, 2 id, 0
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +48,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
 
-        if (loader.getId() == 1) {//Ordenar por titulo.
-
+        if (opcionOrdenar == 0){ //La lista esta llena y en orden, no es necesaria llenarla de nuevo.
+            mPostList.addAll(data);
         }
-
-        if (loader.getId() == 2) {//Ordenar por id.
-
-        }
-        mPostList.addAll(data);
 
         //Comienza Recyclerview.
         // Create recycler view.
         mRecyclerView = findViewById(R.id.recyclerview);
         // Create an adapter and supply the data to be displayed.
-        mAdapter = new PostListAdapter(this, mPostList);
+        if (opcionOrdenar == 0){ //El adaptador fue creado anteriormente.
+            mAdapter = new PostListAdapter(this, mPostList);
+        }
         // Connect the adapter with the recycler view.
         mRecyclerView.setAdapter(mAdapter);
         // Give the recycler view a default layout manager.
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Post>> loader) {
-
     }
 
     //Comienza menu_main.
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switch (item.getItemId()) {
             case R.id.option_ordenar_id:
                 //Código para ordenar de acuerdo al id.
-
+                this.opcionOrdenar = 2;
                 Collections.sort(mPostList, new Comparator<Post>() {
                     @Override
                     public int compare(Post o1, Post o2) {
@@ -110,12 +107,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 });
 
                 //Pasamos la lista ordenara al adaptador.
-                mAdapter = new PostListAdapter(this, mPostList);
+                //mAdapter = new PostListAdapter(this, mPostList);
                 getSupportLoaderManager().restartLoader(0, null, MainActivity.this);
 
                 Toast.makeText(this, "ID", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.option_ordenar_titulo:
+                this.opcionOrdenar = 1;
                 //Código para ordenar de acuerdo al titulo.
                 Collections.sort(mPostList, new Comparator<Post>() {
                     @Override
