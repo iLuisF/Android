@@ -71,8 +71,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             TextView urlAlbum = (TextView) v.findViewById(R.id.album_url);
             Toast.makeText(v.getContext(), albumId.getText().toString(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(v.getContext(), InformacionActivity.class);
-            intent.putExtra("albumId", albumId.toString());
-            intent.putExtra("albumUrl", albumUrl.toString());
+            intent.putExtra("albumId", albumId.getText().toString());
+            intent.putExtra("albumUrl", albumUrl.getText().toString());
             //comienza: pasar la imagen
             intent.putExtra("urlImagen", imagenAlbum.getContentDescription());
             //termina: pasar imagen
@@ -115,9 +115,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         //Recupera la información para esa posición.
         Post mCurrent = mPostList.get(position);
         //Agrega la información a la vista.
-        holder.albumId.setText(String.valueOf(mCurrent.getAlbumId()));
+        holder.albumId.setText("ID Álbum: " + String.valueOf(mCurrent.getAlbumId()));
         holder.postItemView.setText(mCurrent.getTitle());
-        holder.albumUrl.setText(mCurrent.getUrl());
+        holder.albumUrl.setText("URL: " + mCurrent.getUrl());
         holder.imagenAlbum.setContentDescription(mCurrent.getThumbnailUrl());
         Picasso.with(holder.postItemView.getContext()).load(mCurrent.getThumbnailUrl()).into(holder.imagenAlbum);
     }

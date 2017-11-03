@@ -4,4 +4,5 @@
     <string name="menu_ordenar_titulo">Titulo</string>
     <string name="menu_ordenar_id">ID</string>
     <string name="title_activity_informacion">InformacionActivity</string>
+    <string name="abrir_navegador">Abrir navegador</string>
 </resources>
