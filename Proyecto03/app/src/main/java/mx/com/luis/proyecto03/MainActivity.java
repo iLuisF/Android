@@ -54,16 +54,17 @@ public class MainActivity extends AppCompatActivity {
     private void setAlarma(long time){
 
         //Obtenemos el alarm manager
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         //Creamos un nuevo intent especificando el broadcast receiver.
-        Intent i = new Intent(this, AlarmReceiver.class);
+        Intent intent = new Intent(this, AlarmReceiver.class);
 
+        //Para crear más de una alarma: https://stackoverflow.com/questions/7688686/alarmmanager-setting-more-than-once
         //Creamos un pending intent usando el intent.
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         //Configuramos la alarma para que se repita cada dia.
-        am.setRepeating(AlarmManager.RTC, time, AlarmManager.INTERVAL_DAY, pi);
+        alarmManager.setRepeating(AlarmManager.RTC, time, AlarmManager.INTERVAL_DAY, pendingIntent);
         Toast.makeText(this, "Alarma configurada", Toast.LENGTH_SHORT).show();
     }
 
