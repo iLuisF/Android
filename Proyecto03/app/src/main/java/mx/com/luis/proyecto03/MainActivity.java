@@ -1,71 +1,69 @@
 package mx.com.luis.proyecto03;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import mx.com.luis.proyecto03.fragments.FragmentOne;
+import mx.com.luis.proyecto03.fragments.FragmentTwo;
+
+/**
+ * Uso de fragmentos: http://www.gadgetsaint.com/android/create-viewpager-tabs-android/#.Wii5dUriZPY
+ */
 public class MainActivity extends AppCompatActivity {
 
-    private TimePicker timePicker;
-    private Button botonActivarAlarma;
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Asignamos(inicializamos) variables, vistas, etc.
-        timePicker = findViewById(R.id.timePicker);
-        botonActivarAlarma = findViewById(R.id.button_activar_alarma);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new FragmentOne(), "ALARMA");
+        adapter.addFragment(new FragmentTwo(), "TEMPORIZADOR");
+        viewPager.setAdapter(adapter);
 
-        botonActivarAlarma.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Necesitamos un calendario para obtener el tiempo en milisegundos.
-                //ya que el AlarmManager toma tiempo en milisegundos para configurar la alarma.
-                Calendar calendar = Calendar.getInstance();
-                if (android.os.Build.VERSION.SDK_INT >= 23) {
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                            timePicker.getHour(), timePicker.getMinute(), 0);
-                } else {
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-                }
-                setAlarma(calendar.getTimeInMillis());
-            }
-        });
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setAlarma(long time){
 
-        //Obtenemos el alarm manager
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    // Adapter for the viewpager using FragmentPagerAdapter
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        //Creamos un nuevo intent especificando el broadcast receiver.
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
 
-        //Para crear más de una alarma: https://stackoverflow.com/questions/7688686/alarmmanager-setting-more-than-once
-        //Creamos un pending intent usando el intent.
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
 
-        //Configuramos la alarma para que se repita cada dia.
-        alarmManager.setRepeating(AlarmManager.RTC, time, AlarmManager.INTERVAL_DAY, pendingIntent);
-        Toast.makeText(this, "Alarma configurada", Toast.LENGTH_SHORT).show();
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
-
 }
