@@ -4,6 +4,9 @@
 
     <!--  Permission required to Waking Lock if device screen is off  -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- permission required to automatically restart a
+           repeating alarm if the user reboots the device -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +27,8 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
-        <receiver android:name=".TimerReceiver"
+        <receiver
+            android:name=".TimerReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>

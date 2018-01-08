@@ -28,6 +28,9 @@ import mx.com.luis.proyecto03.TimerReceiver;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 
+/**
+ * Clase que modela y construye el temporizador.
+ */
 public class FragmentTwo extends Fragment {
 
     private PendingIntent pendingIntent;
@@ -164,5 +167,6 @@ public class FragmentTwo extends Fragment {
 
         }.start();
     }
+
 
 }

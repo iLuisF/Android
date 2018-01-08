@@ -23,6 +23,9 @@ import java.util.Calendar;
 import mx.com.luis.proyecto03.AlarmReceiver;
 import mx.com.luis.proyecto03.R;
 
+/**
+ * Clase que construye y modela la alarma.
+ */
 public class FragmentOne extends Fragment {
 
     private TimePicker timePicker;
