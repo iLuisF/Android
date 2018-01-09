@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Proyecto04</string>
+    <string name="url_photo">https://jsonplaceholder.typicode.com/photos</string>
+    <string name="menu_ordenar_titulo">Titulo</string>
+    <string name="menu_ordenar_id">ID</string>
+    <string name="title_activity_informacion">InformacionActivity</string>
+    <string name="abrir_navegador">Abrir navegador</string>
+</resources>
