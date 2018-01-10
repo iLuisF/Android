@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.LinkedList;
+
 /**
  * CRUD de una base de datos, para poder almacenar los items(de la clase post, es decir, albumes).
  *
@@ -24,7 +26,6 @@ public class ControladorDB extends SQLiteOpenHelper{
     private static final String COLUMNA_URL = "url";
     private static final String COLUMNA_THUMBNAIL_URL = "thumbnail_url";
 
-    //
     private static final String SQL_CREAR  = "create table " + TABLA_ALBUMES +
             "(" + COLUMNA_ALBUM_ID  + " integer, "
             + COLUMNA_ID  + " integer primary key autoincrement, "
@@ -32,6 +33,7 @@ public class ControladorDB extends SQLiteOpenHelper{
             + COLUMNA_URL + " text, "
             + COLUMNA_THUMBNAIL_URL + " text);";
 
+    private static final String SQL_DROP = "DROP TABLE IF EXISTS " + DATABASE_NAME;
 
     public ControladorDB(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,9 +44,20 @@ public class ControladorDB extends SQLiteOpenHelper{
         db.execSQL(SQL_CREAR);
     }
 
+    /**
+     * Se ejecuta cada vez que recompilamos e instalamos la app con un nuevo número
+     * de versión de base de datos(DATABASE_VERSION).
+     *
+     * Primero borramos la base de datos actual y la creamos de nuevo.
+     *
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL(SQL_DROP);
+        this.onCreate(db);
     }
 
     public void agregar(Integer albumId, String title, String url, String thumbnail){
@@ -58,23 +71,63 @@ public class ControladorDB extends SQLiteOpenHelper{
         db.close();
     }
 
-    public void obtener(Integer id){
+    public void agregar(Post album){
+        agregar(album.getAlbumId(), album.getTitle(), album.getUrl(), album.getThumbnailUrl());
+    }
+
+    public Post obtener(Integer id){
+        Post post = null;
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] projection = {COLUMNA_ALBUM_ID, COLUMNA_ID, COLUMNA_TITLE,
+        String[] projection = {COLUMNA_ALBUM_ID, COLUMNA_ID,
         COLUMNA_TITLE, COLUMNA_URL, COLUMNA_THUMBNAIL_URL};
 
-        Cursor cursor = db.query(TABLA_ALBUMES, projection," _id = ?",
+        Cursor cursor = db.query(TABLA_ALBUMES, projection," id = ?",
                 new String[]{String.valueOf(id)}, null, null,
                 null, null);
 
         if(cursor != null){
             cursor.moveToFirst();
+            post = new Post();
+            post.setAlbumId(Integer.parseInt(cursor.getString(0)));
+            post.setId(Integer.parseInt(cursor.getString(1)));
+            post.setTitle(cursor.getString(2));
+            post.setUrl(cursor.getString(3));
+            post.setThumbnailUrl(cursor.getString(4));
         }
 
         db.close();
+        return post;
     }
 
-    public void actualizar(Integer albumId, String title, String url, String thumbnail,
+    public LinkedList<Post> getAllAlbumes(){
+        LinkedList<Post> albumes = new LinkedList<>();
+        String query = "SELECT * FROM " + DATABASE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        Post album = null;
+        if(cursor.moveToFirst()){
+            do{
+                album.setAlbumId(Integer.parseInt(cursor.getString(0)));
+                album.setId(Integer.parseInt(cursor.getString(1)));
+                album.setTitle(cursor.getString(2));
+                album.setUrl(cursor.getString(3));
+                album.setThumbnailUrl(cursor.getString(4));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return albumes;
+    }
+
+    /**
+     *
+     * @param albumId
+     * @param title
+     * @param url
+     * @param thumbnail
+     * @param id
+     * @return Número de registros actualizados.
+     */
+    public int actualizar(Integer albumId, String title, String url, String thumbnail,
                             Integer id){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -88,6 +141,12 @@ public class ControladorDB extends SQLiteOpenHelper{
                 new String[]{String.valueOf(id)});
 
         db.close();
+        return i;
+    }
+
+    public int actualizar (Post album){
+        return  actualizar(album.getAlbumId(), album.getTitle(), album.getUrl(),
+                album.getThumbnailUrl(),  album.getId());
     }
 
     public boolean eliminar(int id){
@@ -101,4 +160,5 @@ public class ControladorDB extends SQLiteOpenHelper{
             return false;
         }
     }
+
 }

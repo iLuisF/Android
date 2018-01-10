@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.io.File;
 import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +45,18 @@ public class MainActivity extends AppCompatActivity implements
             mPostList.addAll(data);
         }
 
+        if(databaseExist()){
+            ControladorDB controladorDB = new ControladorDB(getApplicationContext());
+            Toast.makeText(getApplicationContext(), controladorDB.obtener(1).getTitle(), Toast.LENGTH_LONG).show();
+        }else {
+            ControladorDB controladorDB = new ControladorDB(getApplicationContext());
+            for(int i = 0; i < 100; i++){//Lo acotamos para que no ocurra algun error.
+            Post album = mPostList.get(i);
+                controladorDB.agregar(album.getAlbumId(), album.getTitle(), album.getUrl(),
+                        album.getThumbnailUrl());
+            }
+        }
+
         //Comienza Recyclerview(se crea).
         mRecyclerView = findViewById(R.id.recyclerview);
         // Create an adapter and supply the data to be displayed.
@@ -60,6 +73,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<List<Post>> loader) {
+    }
+
+    /**
+     * Verifica si existe una base de datos.
+     * @return True si existe la base de datos.
+     */
+    public boolean databaseExist() {
+        String DB_PATH = "/data/data/mx.com.luis.proyecto04/databases/";
+        String DB_NAME = "proyecto04.db";
+
+        File dbFile = new File(DB_PATH + DB_NAME);
+        return dbFile.exists();
     }
 
     //Comienza menu_main.
