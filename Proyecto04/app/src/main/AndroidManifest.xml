@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".InformacionActivity"></activity>
+        <provider
+            android:authorities="mx.com.luis.proyecto04.modelo.PostProvider"
+            android:name=".modelo.PostProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

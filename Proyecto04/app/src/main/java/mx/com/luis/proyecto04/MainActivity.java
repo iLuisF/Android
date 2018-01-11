@@ -1,82 +1,74 @@
 package mx.com.luis.proyecto04;
 
+import mx.com.luis.proyecto04.modelo.PostContract;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import java.io.File;
-import java.text.Collator;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Post>> {
+import java.io.File;
+import java.util.List;
 
-    private RecyclerView mRecyclerView;
-    private PostListAdapter mAdapter;
-    private LinkedList<Post> mPostList = new LinkedList<>(); //Lista de items.
-    private int opcionOrdenar = 0; //1 titulo, 2 id, 0
+/**
+ * La primera vez que se ejecuta, se conectara a una página usando un AsyncTaskLoader para descargar
+ * todos los albumes, y estos los guarda en una base de datos, para que despues se use un
+ * CursorLoader y un RecyclerView para mostrarlos, para usar el CursorLoader se necesito crear un
+ * ContentProvider.
+ */
+public class MainActivity extends AppCompatActivity implements PostAdapter.OnItemClickListener {
+
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private PostAdapter postAdapter;
+    //Loaders que se encargaran de vizualizar y poblar la base de datos.
+    private LoaderManager.LoaderCallbacks<Cursor> cursorLoaderCallbacks;
+    private LoaderManager.LoaderCallbacks<List<Post>> listLoaderCallbacks;
+    //Identificadores de los loaders.
+    private static final int CURSOR_LOADER_CALLBACKS = 1;
+    private static final int LIST_LOADER_CALLBACKS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportLoaderManager().initLoader(0, null, this);
+
+        //Se crean los loaders.
+        cursorLoaderCallbacks = getCursorLoaderCallbacks();
+        listLoaderCallbacks = getListLoaderCallbacks();
+
+        //Se Prepara la lista
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView.setHasFixedSize(true);
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        postAdapter = new PostAdapter(this, this);
+        recyclerView.setAdapter(postAdapter);
+
+        // Iniciar loader
+        if (databaseExist()) {
+            //Solo se lee lo que esta en la base de datos ya que ya está ya esta poblada.
+            getSupportLoaderManager().restartLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
+        } else {
+            //Se descarga el contenido de internet a la base de datos para luego verlo desde esta.
+            getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
+            getSupportLoaderManager().restartLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
+        }
     }
 
     @Override
-    public Loader<List<Post>> onCreateLoader(int id, Bundle args) {
-        return new PostLoader(this);
-    }
+    public void onClick(PostAdapter.ViewHolder holder, int id) {
 
-    @Override
-    public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
-
-        if (opcionOrdenar == 0) {//La lista esta llena y en orden, no es necesaria llenarla de nuevo
-            mPostList.addAll(data);
-        }
-
-        if(databaseExist()){
-            ControladorDB controladorDB = new ControladorDB(getApplicationContext());
-            Toast.makeText(getApplicationContext(), controladorDB.obtener(1).getTitle(), Toast.LENGTH_LONG).show();
-        }else {
-            ControladorDB controladorDB = new ControladorDB(getApplicationContext());
-            for(int i = 0; i < 100; i++){//Lo acotamos para que no ocurra algun error.
-            Post album = mPostList.get(i);
-                controladorDB.agregar(album.getAlbumId(), album.getTitle(), album.getUrl(),
-                        album.getThumbnailUrl());
-            }
-        }
-
-        //Comienza Recyclerview(se crea).
-        mRecyclerView = findViewById(R.id.recyclerview);
-        // Create an adapter and supply the data to be displayed.
-        if (opcionOrdenar == 0) { //El adaptador fue creado anteriormente.
-            mAdapter = new PostListAdapter(this, mPostList);
-        }
-        // Connect the adapter with the recycler view.
-        mRecyclerView.setAdapter(mAdapter);
-        // Give the recycler view a default layout manager.
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //Finaliza Recyclerview.
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Post>> loader) {
     }
 
     /**
      * Verifica si existe una base de datos.
+     *
      * @return True si existe la base de datos.
      */
     public boolean databaseExist() {
@@ -87,65 +79,73 @@ public class MainActivity extends AppCompatActivity implements
         return dbFile.exists();
     }
 
-    //Comienza menu_main.
-
     /**
-     * Inicializa los contenidos del menu_main de opciones estandar de la actividad, es este caso
-     * es el menu_main para ordenar ya sea por id o por titulo.
+     * Loader para cargar el contenido en el RecyclerView, es decir, lee el contenido desde la
+     * base de datos ya poblada.
      *
-     * @param menu
      * @return
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public LoaderManager.LoaderCallbacks<Cursor> getCursorLoaderCallbacks() {
+        return new LoaderManager.LoaderCallbacks<Cursor>() {
+
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                return new CursorLoader(getApplicationContext(), PostContract.getContentUri(),
+                        null, null, null, null);
+            }
+
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                if (postAdapter != null) {
+                    postAdapter.swapCursor(data);
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+
+            }
+        };
     }
 
     /**
-     * Cuando el usuario seleccione una opción del menu_main se activara su acción.
+     * Loader para descargar el contenido de Internet y poblar la base de datos.
      *
-     * @param item
      * @return
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.option_ordenar_id:
-                //Código para ordenar de acuerdo al id.
-                this.opcionOrdenar = 2;
-                Collections.sort(mPostList, new Comparator<Post>() {
-                    @Override
-                    public int compare(Post o1, Post o2) {
-                        return Collator.getInstance().compare(String.valueOf(o1.getId()), String.valueOf(o2.getId()));
-                    }
-                });
+    public LoaderManager.LoaderCallbacks<List<Post>> getListLoaderCallbacks() {
+        return new LoaderManager.LoaderCallbacks<List<Post>>() {
 
-                //Pasamos la lista ordenara al adaptador.
-                //mAdapter = new PostListAdapter(this, mPostList);
-                getSupportLoaderManager().restartLoader(0, null, MainActivity.this);
-                Toast.makeText(this, "ID", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.option_ordenar_titulo:
-                this.opcionOrdenar = 1;
-                //Código para ordenar de acuerdo al titulo.
-                Collections.sort(mPostList, new Comparator<Post>() {
-                    @Override
-                    public int compare(Post o1, Post o2) {
-                        return Collator.getInstance().compare(o1.getTitle(), o2.getTitle());
-                    }
-                });
+            @Override
+            public Loader<List<Post>> onCreateLoader(int id, Bundle args) {
+                return new PostLoader(getApplicationContext());
+            }
 
-                //Pasamos la lista ordenada al adaptador.
-                mAdapter = new PostListAdapter(this, mPostList);
-                getSupportLoaderManager().restartLoader(0, null, MainActivity.this);
-                Toast.makeText(this, "Titulo", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;//Revisar esta linea.
+            @Override
+            public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
+
+                //Poblamos la base de datos.
+                //Lo acotamos para que no ocurra algun error. Ya que despues de varias ejecuciones,
+                //comenzo a dar un error.
+                for (int i = 0; i < data.size() - 4000; i++) {
+                    ContentValues values = new ContentValues();
+                    values.put(PostContract.Columnas.getColumnaAlbumId(), data.get(i).getAlbumId());
+                    values.put(PostContract.Columnas.getColumnaTitle(), data.get(i).getTitle());
+                    values.put(PostContract.Columnas.getColumnaUrl(), data.get(i).getUrl());
+                    values.put(PostContract.Columnas.getColumnaThumbnailUrl(), data.get(i).getThumbnailUrl());
+
+                    getContentResolver().insert(
+                            PostContract.getContentUri(),
+                            values
+                    );
+                }
+            }
+
+
+            @Override
+            public void onLoaderReset(Loader<List<Post>> loader) {
+            }
+        };
+
     }
 
-    //Finaliza menu_main.
 }
