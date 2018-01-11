@@ -13,7 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String SQL_CREAR  = "create table " + PostContract.getTablaAlbumes() +
             "(" + PostContract.Columnas.getColumnaAlbumId() + " integer, "
-            + PostContract.Columnas._ID + " integer primary key autoincrement, "
+            + PostContract.Columnas._ID + " integer primary key, "
             + PostContract.Columnas.getColumnaTitle() + " text, "
             + PostContract.Columnas.getColumnaUrl() + " text, "
             + PostContract.Columnas.getColumnaThumbnailUrl() + " text);";

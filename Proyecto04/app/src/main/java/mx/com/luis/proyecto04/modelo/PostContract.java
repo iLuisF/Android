@@ -43,7 +43,7 @@ public class PostContract {
 
         //Columnas de la tabla.
         private static final String COLUMNA_ALBUM_ID = "album_id";
-        //private static final String COLUMNA_ID = "id";
+        //private static final String COLUMNA_ID = "id";//Se usa el que provee Android, BaseColums.
         private static final String COLUMNA_TITLE = "title";
         private static final String COLUMNA_URL = "url";
         private static final String COLUMNA_THUMBNAIL_URL = "thumbnail_url";
@@ -58,8 +58,9 @@ public class PostContract {
             return COLUMNA_ALBUM_ID;
         }
 
+        //Se usa el que provee Android con BaseColums.
         //public static String getColumnaId() {
-        //    return COLUMNA_ID;
+        //  return COLUMNA_ID;
         //}
 
         public static String getColumnaTitle() {

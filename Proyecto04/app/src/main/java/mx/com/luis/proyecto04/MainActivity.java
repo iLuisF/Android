@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
                 for (int i = 0; i < data.size() - 4000; i++) {
                     ContentValues values = new ContentValues();
                     values.put(PostContract.Columnas.getColumnaAlbumId(), data.get(i).getAlbumId());
+                    values.put(PostContract.Columnas._ID, data.get(i).getId());
                     values.put(PostContract.Columnas.getColumnaTitle(), data.get(i).getTitle());
                     values.put(PostContract.Columnas.getColumnaUrl(), data.get(i).getUrl());
                     values.put(PostContract.Columnas.getColumnaThumbnailUrl(), data.get(i).getThumbnailUrl());

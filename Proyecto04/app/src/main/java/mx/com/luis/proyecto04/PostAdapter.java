@@ -116,7 +116,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
     interface ConsultaAlbumes{
         int albumId = 1;
-        int _ID = 2;
+        int _ID = 0;//¿El identificador siempre es la primera columna?
         int albumTitle = 2;
         int url = 3;
         int thumbnailUrl = 4;
