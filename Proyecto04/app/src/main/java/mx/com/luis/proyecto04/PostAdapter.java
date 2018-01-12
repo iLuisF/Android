@@ -1,6 +1,7 @@
 package mx.com.luis.proyecto04;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,6 +52,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
 
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), InformacionActivity.class);
+            intent.putExtra("albumId", albumId.getText().toString());
+            intent.putExtra("albumUrl", albumUrl.getText().toString());
+            intent.putExtra("urlImagen", imagenAlbum.getContentDescription());
+            v.getContext().startActivity(intent);
             escucha.onClick(this, obtenerIdAlbum(getAdapterPosition()));
         }
     }

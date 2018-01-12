@@ -1,15 +1,21 @@
 package mx.com.luis.proyecto04;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import mx.com.luis.proyecto04.modelo.PostContract;
 
 public class InformacionActivity extends AppCompatActivity {
 
@@ -50,4 +56,31 @@ public class InformacionActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Comienza menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_informacion_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete:
+                Uri uri = ContentUris.withAppendedId(PostContract.getContentUri(),
+                        Integer.parseInt(idAlbum.getText().toString()));
+                this.getContentResolver().delete(
+                        uri,
+                        null,
+                        null
+                );
+                Toast.makeText(getApplicationContext(), "Album eliminado",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //Finaliza menu
 }

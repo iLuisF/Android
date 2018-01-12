@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--PREFERENCIAS GENERALES-->
+    <PreferenceCategory
+        android:key="pref_gen"
+        android:title="@string/pref_gen">
+    <!-- Cantidad máxima de entradas -->
+    <ListPreference
+        android:key="ordenamiento_post"
+        android:title="Ordenar albumes"
+        android:defaultValue="1"
+        android:entries="@array/pref_ordenamiento_entradas"
+        android:entryValues="@array/pref_ordenamiento_valores"
+        android:summary="@string/pref_ordenacion_resumen" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preferencia del ordenamiento -->
+    <string name="pref_ordenamiento_titulo">Ordenar albumes</string>
+    <string-array name="pref_ordenamiento_entradas">
+        <item>ID</item>
+        <item>Titulo</item>
+    </string-array>
+    <string-array name="pref_ordenamiento_valores">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="pref_ordenacion_resumen">Forma de ordenar los álbumes.</string>
+    <!-- Titulos de Grupos-->
+    <string name="pref_gen">General</string>
+</resources>
