@@ -6,9 +6,11 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,8 @@ import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CursorAdapter;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.List;
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
     private static final int LIST_LOADER_CALLBACKS = 2;
     private FloatingActionButton floatingActionButton;
     private static int tipoOrdenamiento = 1; //1 id, 2 titulo.
+    //Atributos necesarios para recargar
+    private SwipeRefreshLayout refreshLayout;
 
     /**
      * Para percibir los cambios en tiempo real luego de que se hayan modificado las preferencias ya
@@ -89,6 +95,14 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         postAdapter = new PostAdapter(this, this);
         recyclerView.setAdapter(postAdapter);
 
+        //Obtener el refreshLayaout.
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        iniciarRefreshLayout();
+
+        // Iniciar loader
+        if (!databaseExist()) {
+            getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
+        }
     }
 
     @Override
@@ -163,25 +177,23 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
             public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
 
                 //Poblamos la base de datos.
-                //Lo acotamos para que no ocurra algun error. Ya que despues de varias ejecuciones,
-                //comenzo a dar un error.
-                for (int i = 0; i < data.size() - 4000; i++) {
+                //Lo acotamos para evitar sobretiempo de ejecucion.
+                for (int i = 0; i < 500; i++) {//son 5000 en total
                     ContentValues values = new ContentValues();
                     values.put(PostContract.Columnas.getColumnaAlbumId(), data.get(i).getAlbumId());
                     values.put(PostContract.Columnas._ID, data.get(i).getId());
                     values.put(PostContract.Columnas.getColumnaTitle(), data.get(i).getTitle());
                     values.put(PostContract.Columnas.getColumnaUrl(), data.get(i).getUrl());
                     values.put(PostContract.Columnas.getColumnaThumbnailUrl(), data.get(i).getThumbnailUrl());
-
-                    getContentResolver().insert(
-                            PostContract.getContentUri(),
-                            values
-                    );
+                    if (!estaId(data.get(i).getId())) {
+                        getContentResolver().insert(PostContract.getContentUri(), values);
+                    }
                 }
             }
 
             @Override
             public void onLoaderReset(Loader<List<Post>> loader) {
+
             }
         };
 
@@ -211,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
      * Action Button bar, el cual dirige a una nueva actividad para poder agregar un nuevo
      * album.
      */
-    private void botonAgregarAlbum(){
+    private void botonAgregarAlbum() {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.agregar);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,4 +233,51 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
             }
         });
     }
+
+    /**
+     * Iniciar la tarea asíncrona al revelar el indicador.
+     */
+    private void iniciarRefreshLayout() {
+        refreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        //getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
+                        //getSupportLoaderManager().initLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
+                        // Iniciar loader
+
+                        if (databaseExist()) {
+                            getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
+                        }
+
+                        //Toast.makeText(getApplicationContext(), ":D", Toast.LENGTH_LONG).show();
+                        // Parar la animación del indicador
+                        refreshLayout.setRefreshing(false);
+                    }
+                }
+        );
+    }
+
+    /**
+     * Verifica si hay un identificador en la base de datos.
+     *
+     * @return true si el <strong>id</strong> ya se encuentra en la base de datos.
+     */
+    private boolean estaId(int id){
+        boolean estaId;
+        Cursor c = getContentResolver().query(PostContract.getContentUri(),
+                null,
+                PostContract.Columnas._ID + "=?",
+                new String[]{String.valueOf(id)},
+                null);
+        if(c.moveToFirst()){
+            //String a = c.getString(c.getColumnIndex(PostContract.Columnas._ID));
+            return estaId = true;
+        }else {//Se puede insertar, ya que no hay un id que aparezca en la base de datos.
+            estaId = false;
+        }
+        c.close();
+        return estaId;
+    }
+
 }

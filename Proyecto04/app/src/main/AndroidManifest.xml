@@ -35,6 +35,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="mx.com.luis.proyecto04.MainActivity" />
         </activity>
+        <service android:name=".JobSchedulerService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
-
 </manifest>
