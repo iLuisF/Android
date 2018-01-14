@@ -37,5 +37,10 @@
         </activity>
         <service android:name=".JobSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver android:name=".PostServiceReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

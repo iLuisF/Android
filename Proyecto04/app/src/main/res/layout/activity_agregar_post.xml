@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,83 +11,135 @@
         android:id="@+id/editText_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Titulo"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_titulo"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editText_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
         android:ems="10"
         android:inputType="textWebEditText"
-        android:text="URL"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_url"
         app:layout_constraintTop_toBottomOf="@+id/editText_title" />
 
     <EditText
         android:id="@+id/editText_thumbnail_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
+        android:layout_marginTop="16dp"
+        android:ems="9"
         android:inputType="textWebEditText"
-        android:text="Thumbnail URL"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_thumbnail_url"
         app:layout_constraintTop_toBottomOf="@+id/editText_url" />
 
     <EditText
         android:id="@+id/editText_album_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:ems="10"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
+        android:ems="5"
         android:inputType="number"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_album_id"
         app:layout_constraintTop_toBottomOf="@+id/editText_thumbnail_url" />
 
     <EditText
         android:id="@+id/editText_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="28dp"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_id"
         app:layout_constraintTop_toBottomOf="@+id/editText_album_id" />
 
-    <Button
-        android:id="@+id/button_aceptar"
+    <TextView
+        android:id="@+id/textView_titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="84dp"
-        android:layout_marginTop="60dp"
-        android:text="ACEPTAR"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_id" />
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="44dp"
+        android:text="Titulo"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_cancelar"
+    <TextView
+        android:id="@+id/textView_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="84dp"
-        android:layout_marginTop="60dp"
-        android:text="CANCELAR"
+        android:layout_marginTop="44dp"
+        android:text="URL"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_id" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_titulo" />
 
+    <TextView
+        android:id="@+id/textView_thumbnail_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="36dp"
+        android:text="Thumbnail URL"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_url" />
+
+    <TextView
+        android:id="@+id/textView_album_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="48dp"
+        android:text="Álbum ID"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_thumbnail_url" />
+
+    <TextView
+        android:id="@+id/textView_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="40dp"
+        android:text="ID"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_album_id" />
+
+    <Button
+        android:id="@+id/button_aceptar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/aceptar"
+        android:elevation="0dp"
+        android:text="ACEPTAR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_cancelar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cancelar"
+        android:text="CANCELAR"
+        app:layout_constraintBottom_toTopOf="@+id/button_aceptar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>
