@@ -2,22 +2,10 @@ package mx.com.luis.proyecto04;
 
 import mx.com.luis.proyecto04.modelo.PostContract;
 
-import android.app.job.JobInfo;
-import android.app.job.JobParameters;
-import android.app.job.JobScheduler;
-import android.app.job.JobService;
-import android.content.ComponentName;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,7 +18,6 @@ import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.Toast;
 
 import java.io.File;
@@ -59,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
     private static int tipoOrdenamiento = 1; //1 id, 2 titulo.
     //Atributos necesarios para recargar
     private SwipeRefreshLayout refreshLayout;
-    //Identifica desde donde se poblara.
-    private static int poblar;
 
     /**
      * Para percibir los cambios en tiempo real luego de que se hayan modificado las preferencias ya
@@ -83,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
             getSupportLoaderManager().restartLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
         } else {
             //Se descarga el contenido de internet a la base de datos para luego verlo desde esta.
-            poblar = 1;
             getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
             getSupportLoaderManager().restartLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
         }
@@ -98,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
 
         //Se crean los loaders.
         cursorLoaderCallbacks = getCursorLoaderCallbacks();
-        listLoaderCallbacks = getListLoaderCallbacks();
+        listLoaderCallbacks = new ListLoaderCallbacks(getApplicationContext());
 
         //Se Prepara la lista
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -115,6 +99,13 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         // Iniciar loader
         if (!databaseExist()) {
             getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
+        }
+
+        //Si se activo el JobSchedulerService por un intent. 0 se activo, 1 en otro caso.
+        if(getIntent().getIntExtra("recargar", 1) == 0){
+            recargarBaseDatos();
+            Toast.makeText(getApplicationContext(), "Se recargo la base de datos."
+                    , Toast.LENGTH_LONG).show();
         }
     }
 
@@ -173,45 +164,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         };
     }
 
-    /**
-     * Loader para descargar el contenido de Internet y poblar la base de datos.
-     *
-     * @return
-     */
-    public LoaderManager.LoaderCallbacks<List<Post>> getListLoaderCallbacks() {
-        return new LoaderManager.LoaderCallbacks<List<Post>>() {
-
-            @Override
-            public Loader<List<Post>> onCreateLoader(int id, Bundle args) {
-                    return new PostLoader(getApplicationContext());
-            }
-
-            @Override
-            public void onLoadFinished(Loader<List<Post>> loader, List<Post> data) {
-
-                //Poblamos la base de datos.
-                //Lo acotamos para evitar sobretiempo de ejecucion.
-                for (int i = 0; i < 500; i++) {//son 5000 en total
-                    ContentValues values = new ContentValues();
-                    values.put(PostContract.Columnas.getColumnaAlbumId(), data.get(i).getAlbumId());
-                    values.put(PostContract.Columnas._ID, data.get(i).getId());
-                    values.put(PostContract.Columnas.getColumnaTitle(), data.get(i).getTitle());
-                    values.put(PostContract.Columnas.getColumnaUrl(), data.get(i).getUrl());
-                    values.put(PostContract.Columnas.getColumnaThumbnailUrl(), data.get(i).getThumbnailUrl());
-                    if (!estaId(data.get(i).getId())) {
-                        getContentResolver().insert(PostContract.getContentUri(), values);
-                    }
-                }
-            }
-
-            @Override
-            public void onLoaderReset(Loader<List<Post>> loader) {
-
-            }
-        };
-
-    }
-
     //Comienza menu donde se encuentra configuracion.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -255,16 +207,9 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        //getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
-                        //getSupportLoaderManager().initLoader(CURSOR_LOADER_CALLBACKS, null, cursorLoaderCallbacks);
-                        // Iniciar loader
-
                         if (databaseExist()) {
-                            poblar = 2;
                             recargarBaseDatos();
                         }
-
-                        //Toast.makeText(getApplicationContext(), ":D", Toast.LENGTH_LONG).show();
                         // Parar la animación del indicador
                         refreshLayout.setRefreshing(false);
                     }
@@ -277,28 +222,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
      */
     public void recargarBaseDatos(){
         getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
-    }
-
-    /**
-     * Verifica si hay un identificador en la base de datos.
-     *
-     * @return true si el <strong>id</strong> ya se encuentra en la base de datos.
-     */
-    private boolean estaId(int id){
-        boolean estaId;
-        Cursor c = getContentResolver().query(PostContract.getContentUri(),
-                null,
-                PostContract.Columnas._ID + "=?",
-                new String[]{String.valueOf(id)},
-                null);
-        if(c.moveToFirst()){
-            //String a = c.getString(c.getColumnIndex(PostContract.Columnas._ID));
-            return estaId = true;
-        }else {//Se puede insertar, ya que no hay un id que aparezca en la base de datos.
-            estaId = false;
-        }
-        c.close();
-        return estaId;
     }
 
 }

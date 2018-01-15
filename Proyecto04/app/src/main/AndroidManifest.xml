@@ -24,7 +24,7 @@
         <provider
             android:name=".modelo.PostProvider"
             android:authorities="mx.com.luis.proyecto04.modelo.PostProvider"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity android:name=".AgregarPostActivity" />
         <activity

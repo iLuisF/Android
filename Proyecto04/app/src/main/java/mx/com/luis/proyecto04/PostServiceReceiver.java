@@ -30,11 +30,14 @@ public class PostServiceReceiver extends BroadcastReceiver{
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void scheduleJob(Context context){
+        final long ONE_DAY_INTERVAL = 24 * 60 * 60 * 1000L; // 1 Day
+
         ComponentName serviceComponentName = new ComponentName(context,
                 JobSchedulerService.class.getName());
         JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponentName);
-        builder.setMinimumLatency(1 * 1000); // wait at least
-        builder.setOverrideDeadline(3 * 1000); // maximum delay
+        //builder.setMinimumLatency(1 * 1000); // wait at least
+        //builder.setOverrideDeadline(3 * 1000); // maximum delay
+        builder.setPeriodic(ONE_DAY_INTERVAL);
         JobScheduler jobScheduler = context.getSystemService(JobScheduler.class);
         jobScheduler.schedule(builder.build());
     }
