@@ -4,6 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <permission android:name="mx.com.luis.proyecto04.READ_DATABASE" android:protectionLevel="normal" />
+    <permission android:name="mx.com.luis.proyecto04.WRITE_DATABASE" android:protectionLevel="normal" />
 
     <application
         android:allowBackup="true"
@@ -22,9 +28,13 @@
         <activity android:name=".InformacionActivity" />
 
         <provider
-            android:name=".modelo.PostProvider"
+            android:name="mx.com.luis.proyecto04.modelo.PostProvider"
             android:authorities="mx.com.luis.proyecto04.modelo.PostProvider"
-            android:exported="true" />
+            android:exported="true"
+            android:readPermission="mx.com.luis.proyecto04.READ_DATABASE"
+            android:writePermission="mx.com.luis.proyecto04.WRITE_DATABASE"
+            />
+
 
         <activity android:name=".AgregarPostActivity" />
         <activity
