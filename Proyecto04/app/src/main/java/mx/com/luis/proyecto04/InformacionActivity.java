@@ -34,6 +34,7 @@ public class InformacionActivity extends AppCompatActivity {
     private String urlAlbumCadena;
     private String urlImagen;
     private Button descargarImagen;
+    private TextView title;
     static final int WRITE_EXTERNAL_STORAGE = 99;
 
     @Override
@@ -51,6 +52,8 @@ public class InformacionActivity extends AppCompatActivity {
         idAlbum = (TextView) findViewById(R.id.album_id_intent);
         idAlbum.setText(getIntent().getStringExtra("albumId").toString());
         navegar = (Button) findViewById(R.id.navegar);
+        title = (TextView) findViewById(R.id.textView_title);
+        title.setText(getIntent().getStringExtra("title").toString());
 
         abrirNavegador(urlAlbumCadena);
         activarBotonDescargar();

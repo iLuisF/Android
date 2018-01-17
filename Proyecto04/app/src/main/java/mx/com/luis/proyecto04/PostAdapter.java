@@ -37,6 +37,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         public final TextView albumId;
         public final ImageView imagenAlbum;
         public final TextView albumUrl;
+        public final TextView title;
         //final PostListAdapter mAdapter;
 
         public ViewHolder(View view){
@@ -46,6 +47,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             imagenAlbum = (ImageView) view.findViewById(R.id.imagen_album);
             albumId = (TextView) view.findViewById(R.id.album_id);
             albumUrl = (TextView) view.findViewById(R.id.album_url);
+            title = (TextView) view.findViewById(R.id.title);
             //Agregar click listener, si se desea.
             view.setOnClickListener(this);
         }
@@ -56,6 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             intent.putExtra("albumId", albumId.getText().toString());
             intent.putExtra("albumUrl", albumUrl.getText().toString());
             intent.putExtra("urlImagen", imagenAlbum.getContentDescription());
+            intent.putExtra("title", title.getText().toString());
             v.getContext().startActivity(intent);
             escucha.onClick(this, obtenerIdAlbum(getAdapterPosition()));
         }
@@ -93,6 +96,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         s = items.getString(ConsultaAlbumes.albumId);
         holder.albumId.setText(s);
         s = items.getString(ConsultaAlbumes.albumTitle);
+        holder.title.setText(s);
         holder.postItemView.setText(s);
         s = items.getString(ConsultaAlbumes.url);
         holder.albumUrl.setText(s);

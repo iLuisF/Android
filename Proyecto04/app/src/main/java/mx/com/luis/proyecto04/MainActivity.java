@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
     private static int tipoOrdenamiento = 1; //1 id, 2 titulo.
     //Atributos necesarios para recargar
     private SwipeRefreshLayout refreshLayout;
+    //¿Se refrescara el RecyclerView una vez al día?
+    private boolean refrescarAlbumes;
+    SharedPreferences sharedPreferences;
 
     /**
      * Para percibir los cambios en tiempo real luego de que se hayan modificado las preferencias ya
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         //Se guardan las preferencias generales iniciales.
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         tipoOrdenamiento = Integer.parseInt(sharedPreferences.getString(("ordenamiento_post"), "0"));
 
         // Iniciar loader
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         setContentView(R.layout.activity_main);
 
         this.botonAgregarAlbum();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Se crean los loaders.
         cursorLoaderCallbacks = getCursorLoaderCallbacks();
@@ -100,12 +103,17 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         if (!databaseExist()) {
             getSupportLoaderManager().initLoader(LIST_LOADER_CALLBACKS, null, listLoaderCallbacks);
         }
-
+        refrescarAlbumes = sharedPreferences.getBoolean("refrescar", true);
         //Si se activo el JobSchedulerService por un intent. 0 se activo, 1 en otro caso.
         if(getIntent().getIntExtra("recargar", 1) == 0){
-            recargarBaseDatos();
-            Toast.makeText(getApplicationContext(), "Se recargo la base de datos."
-                    , Toast.LENGTH_LONG).show();
+            if(refrescarAlbumes){
+                recargarBaseDatos();
+                Toast.makeText(getApplicationContext(), "Se refresco la base de datos."
+                        , Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this, "Habilitar opción para refrescar"
+                        , Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

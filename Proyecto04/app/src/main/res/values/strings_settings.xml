@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Preferencia del ordenamiento -->
-    <string name="pref_ordenamiento_titulo">Ordenar albumes</string>
+    <string name="pref_ordenamiento_titulo">Ordenar álbumes</string>
     <string-array name="pref_ordenamiento_entradas">
         <item>ID</item>
         <item>Titulo</item>
@@ -13,4 +13,6 @@
     <string name="pref_ordenacion_resumen">Forma de ordenar los álbumes.</string>
     <!-- Titulos de Grupos-->
     <string name="pref_gen">General</string>
+    <string name="pref_recargar_base_datos">Refrescar álbumes</string>
+    <string name="def_recargar_base_datos">Automáticamente una vez al día(solo con WIFI).</string>
 </resources>

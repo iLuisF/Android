@@ -12,5 +12,11 @@
         android:entries="@array/pref_ordenamiento_entradas"
         android:entryValues="@array/pref_ordenamiento_valores"
         android:summary="@string/pref_ordenacion_resumen" />
+        <!-- Visibilidad de Miniaturas de las Entradas -->
+        <CheckBoxPreference
+            android:key="refrescar"
+            android:title="@string/pref_recargar_base_datos"
+            android:defaultValue="true"
+            android:summary="@string/def_recargar_base_datos"/>
     </PreferenceCategory>
 </PreferenceScreen>
