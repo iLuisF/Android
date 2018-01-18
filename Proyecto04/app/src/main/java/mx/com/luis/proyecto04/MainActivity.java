@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnIte
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
         tipoOrdenamiento = Integer.parseInt(sharedPreferences.getString(("ordenamiento_post"), "0"));
-
+        
         // Iniciar loader
         if (databaseExist()) {
             //Solo se lee lo que esta en la base de datos ya que ya está ya esta poblada.

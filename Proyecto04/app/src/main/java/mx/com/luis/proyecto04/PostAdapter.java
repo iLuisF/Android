@@ -1,5 +1,6 @@
 package mx.com.luis.proyecto04;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -61,6 +62,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             intent.putExtra("title", title.getText().toString());
             v.getContext().startActivity(intent);
             escucha.onClick(this, obtenerIdAlbum(getAdapterPosition()));
+            //Para que el loader no vuelva a cargar la base de datos, sin concentimiento.
+            ((Activity)context).recreate();
         }
     }
 
